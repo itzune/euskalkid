@@ -9,12 +9,14 @@
     "dev": "vite",
     "build": "vite build && npm run copy-wasm",
     "copy-wasm": "cp node_modules/fasttext.wasm.js/dist/core/fastText.common.wasm dist/",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "fasttext.wasm.js": "^1.0.0"
   },
   "devDependencies": {
+    "gh-pages": "^6.0.0",
     "vite": "^5.0.0"
   }
 }

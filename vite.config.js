@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
-// GitHub Pages deploys to /zeineuski-wasm/
-const base = "/zeineuski-wasm/";
+// GitHub Pages deploys to /euskalkid/
+const base = "/euskalkid/";
 
 export default defineConfig({
   base,

@@ -1,80 +1,112 @@
 /**
- * Zeineuski WASM demo — UI logic.
+ * Zeineuski WASM — UI logic
  */
 import { loadModels, predict, DIALECT_NAMES, BADGE_CLASS } from "./zeineuski.js";
 
-// ── DOM elements ──
-const statusDot = document.getElementById("statusDot");
-const statusText = document.getElementById("statusText");
-const sizeHint = document.getElementById("sizeHint");
-const variantSize = document.getElementById("variantSize");
-const input = document.getElementById("input");
-const btnPredict = document.getElementById("btnPredict");
-const btnClear = document.getElementById("btnClear");
-const result = document.getElementById("result");
-const dialectBadge = document.getElementById("dialectBadge");
-const confidence = document.getElementById("confidence");
-const confidenceFill = document.getElementById("confidenceFill");
-const predictionsList = document.getElementById("predictionsList");
-const exampleChips = document.getElementById("exampleChips");
+// ── DOM ──
+const $ = (id) => document.getElementById(id);
+const el = {
+  statusDot: $("statusDot"),
+  statusText: $("statusText"),
+  sizeHint: $("sizeHint"),
+  variantSize: $("variantSize"),
+  input: $("input"),
+  btnPredict: $("btnPredict"),
+  btnClear: $("btnClear"),
+  result: $("result"),
+  dialectBadge: $("dialectBadge"),
+  confidence: $("confidence"),
+  confidenceFill: $("confidenceFill"),
+  predictionsList: $("predictionsList"),
+  exampleCards: $("exampleCards"),
+};
 
-// ── Examples ──
+// ── Example sentences ──
 const EXAMPLES = [
   {
-    label: "batua",
-    text: "Gaur goizean, Aitor Esteban EAJko diputatua elkarrizketatuko du ETB1eko albistegian.",
+    dialect: "batua",
+    text: "Euskal Herriko Unibertsitateak ikastaro berria antolatu du datorren ikasturterako.",
   },
   {
-    label: "western",
+    dialect: "batua",
+    text: "Emakumeen aurkako indarkeria matxistaren biktima izan diren emakumeei buruzko dokumentala aurkeztu dute gaur.",
+  },
+  {
+    dialect: "western",
     text: "Baleike espediente judizialak itzuli biher izetie inglesa ez dan hizkuntza batien irakurtzen daben bezeroentzat.",
   },
   {
-    label: "central",
-    text: "Gu inguru hontan bizi gea.",
+    dialect: "western",
+    text: "Askatasun zibilen historixa tamalgarri horretaz gain, beste hainbat kontu argitzeke dagoz.",
   },
   {
-    label: "nav-lab",
-    text: "Bena atzuek eskarmentu haundioa zan berko lukete.",
+    dialect: "central",
+    text: "Gu inguru hontan bizi gea, eta oso gustora gainera.",
   },
   {
-    label: "western",
-    text: "Askatasun zibilen historixa tamalgarri horretaz gain.",
-  },
-  {
-    label: "central",
+    dialect: "central",
     text: "Ezarpen-proiektu baten fase hori osatzeko, gitxi gorabehera 17 hillabete bihar'txu SCRk.",
   },
   {
-    label: "nav-lab",
-    text: "Ene exenpluik maiteena igela ta uliaina da.",
+    dialect: "nav-lab",
+    text: "Bena atzuek eskarmentu haundioa zan berko lukete holako lanetan aritzeko.",
   },
   {
-    label: "batua",
-    text: "Euskal Herriko Unibertsitateak ikastaro berria antolatu du datorren ikasturterako.",
+    dialect: "nav-lab",
+    text: "Ene exenpluik maiteena igela ta uliaina da, beti kontatzen duten bezela.",
   },
 ];
 
-// ── Set up examples ──
-EXAMPLES.forEach((ex) => {
-  const chip = document.createElement("div");
-  chip.className = "example-chip";
-  chip.innerHTML = `<span class="chip-label">${ex.label}</span>${ex.text.slice(0, 80)}…`;
-  chip.addEventListener("click", () => {
-    input.value = ex.text;
-    doPredict();
+const DIALECT_COLORS = {
+  batua: "#2a9d8f",
+  western: "#e76f51",
+  central: "#457b9d",
+  "nav-lab": "#6d597a",
+};
+
+function buildExampleCards() {
+  el.exampleCards.innerHTML = EXAMPLES.map((ex, i) => {
+    const color = DIALECT_COLORS[ex.dialect];
+    const label = DIALECT_NAMES[ex.dialect] || ex.dialect;
+    return `
+      <div class="example-card" data-idx="${i}">
+        <div class="card-header">
+          <span class="card-badge" style="background:${color}">${label}</span>
+        </div>
+        <div class="card-text">${ex.text}</div>
+      </div>`;
+  }).join("");
+
+  // Attach click handlers
+  el.exampleCards.querySelectorAll(".example-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const idx = parseInt(card.dataset.idx);
+      const ex = EXAMPLES[idx];
+
+      // Visual feedback: highlight selected card
+      el.exampleCards.querySelectorAll(".example-card").forEach((c) =>
+        c.classList.remove("active")
+      );
+      card.classList.add("active");
+
+      // Set text + auto-predict
+      el.input.value = ex.text;
+      doPredict();
+    });
   });
-  exampleChips.appendChild(chip);
-});
+}
 
 // ── Buttons ──
-btnPredict.addEventListener("click", doPredict);
-btnClear.addEventListener("click", () => {
-  input.value = "";
-  result.classList.remove("visible");
+el.btnPredict.addEventListener("click", doPredict);
+el.btnClear.addEventListener("click", () => {
+  el.input.value = "";
+  el.result.classList.remove("visible");
+  el.exampleCards.querySelectorAll(".example-card").forEach((c) =>
+    c.classList.remove("active")
+  );
 });
 
-// Enter key to predict
-input.addEventListener("keydown", (e) => {
+el.input.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
     doPredict();
   }
@@ -82,55 +114,68 @@ input.addEventListener("keydown", (e) => {
 
 // ── Predict ──
 function doPredict() {
-  const text = input.value.trim();
+  const text = el.input.value.trim();
   if (!text) return;
 
   try {
     const res = predict(text, 0.7);
 
     const badgeClass = BADGE_CLASS[res.dialect] || "badge-uncertain";
-    dialectBadge.innerHTML = `<span class="dialect-badge ${badgeClass}">${res.dialectName}</span>`;
+    el.dialectBadge.innerHTML = `<span class="dialect-badge ${badgeClass}">${res.dialectName}</span>`;
 
     const confPct = (res.confidence * 100).toFixed(1);
-    confidence.textContent = `${confPct}%`;
-    confidenceFill.style.width = `${res.confidence * 100}%`;
+    el.confidence.textContent = `${confPct}%`;
+    el.confidenceFill.style.width = `${res.confidence * 100}%`;
 
-    predictionsList.innerHTML = "";
-    if (res.predictions.length === 0 && res.dialect === "batua") {
-      predictionsList.innerHTML =
-        '<li><span class="pred-label">batua</span><span class="pred-conf">—</span></li>';
+    // Color the confidence bar
+    if (res.confidence >= 0.9) {
+      el.confidenceFill.style.background = "var(--green)";
+    } else if (res.confidence >= 0.7) {
+      el.confidenceFill.style.background = "var(--yellow)";
     } else {
-      res.predictions.forEach((p) => {
-        const li = document.createElement("li");
-        const name = DIALECT_NAMES[p.label] || p.label;
-        li.innerHTML = `<span class="pred-label">${name}</span><span class="pred-conf">${(p.confidence * 100).toFixed(1)}%</span>`;
-        predictionsList.appendChild(li);
-      });
+      el.confidenceFill.style.background = "var(--accent)";
     }
 
-    result.classList.add("visible");
+    el.predictionsList.innerHTML = "";
+    const preds = res.predictions.length > 0
+      ? res.predictions
+      : [{ label: "batua", confidence: res.confidence || 1.0 }];
+
+    preds.forEach((p) => {
+      const li = document.createElement("li");
+      const name = DIALECT_NAMES[p.label] || p.label;
+      li.innerHTML = `<span class="pred-label">${name}</span><span class="pred-conf">${(p.confidence * 100).toFixed(1)}%</span>`;
+      el.predictionsList.appendChild(li);
+    });
+
+    el.result.classList.add("visible");
+
+    // Scroll result into view on mobile
+    el.result.scrollIntoView({ behavior: "smooth", block: "nearest" });
   } catch (err) {
     console.error("Prediction error:", err);
-    statusText.textContent = "Error during prediction: " + err.message;
+    el.statusText.textContent = "Prediction error: " + err.message;
   }
 }
 
 // ── Initialize ──
 async function init() {
+  buildExampleCards();
+
   try {
     await loadModels((msg) => {
-      statusText.textContent = msg;
+      el.statusText.textContent = msg;
       if (msg === "✓ Ready") {
-        statusDot.className = "status-dot ready";
-        btnPredict.disabled = false;
-        sizeHint.style.display = "block";
-        variantSize.textContent = "34";
+        el.statusDot.className = "status-dot ready";
+        el.btnPredict.disabled = false;
+        el.sizeHint.style.display = "block";
+        el.variantSize.textContent = "34";
       }
     });
   } catch (err) {
     console.error("Failed to load models:", err);
-    statusDot.className = "status-dot error";
-    statusText.textContent =
+    el.statusDot.className = "status-dot error";
+    el.statusText.textContent =
       "Error loading models. Check console for details.";
   }
 }

@@ -13,15 +13,15 @@ const MODEL_FILES = {
   dialect: `${HF_BASE}/models/hier_dialect_web.bin`,
 };
 
-const DIALECT_NAMES = {
-  batua: "Batua (Euskara Batua)",
+export const DIALECT_NAMES = {
+  batua: "Batua",
   western: "Mendebaldekoa (Bizkaiera)",
   central: "Erdialdekoa (Gipuzkera)",
   "nav-lab": "Nafar-Lapurtera",
   uncertain: "Zalantzazkoa",
 };
 
-const BADGE_CLASS = {
+export const BADGE_CLASS = {
   batua: "badge-batua",
   western: "badge-western",
   central: "badge-central",
@@ -36,22 +36,21 @@ let _loaded = false;
 
 // ── Load WASM module and models ──
 async function getFastText() {
-  // fasttext.wasm.js provides ESM exports for browser via the package.json exports field
-  const { getFastTextClass } = await import("fasttext.wasm.js");
-  const FastTextClass = await getFastTextClass();
+  const { getFastTextClass, getFastTextModule } = await import("fasttext.wasm.js");
+  const FastTextClass = await getFastTextClass({ getFastTextModule });
   return new FastTextClass();
 }
 
 export async function loadModels(onProgress) {
   if (_loaded) return { binaryModel, dialectModel };
 
-  onProgress?.("Loading WASM module…");
+  onProgress?.("WASM module loading…");
   const ft = await getFastText();
 
-  onProgress?.("Loading binary model (batua vs dialectal, 21MB)…");
+  onProgress?.("Binary model loading (21MB)…");
   binaryModel = await ft.loadModel(MODEL_FILES.binary);
 
-  onProgress?.("Loading dialect model (5-class, 13MB)…");
+  onProgress?.("Dialect model loading (13MB)…");
   dialectModel = await ft.loadModel(MODEL_FILES.dialect);
 
   _loaded = true;
@@ -119,4 +118,4 @@ export function predict(text, threshold = 0.7) {
   };
 }
 
-export { DIALECT_NAMES, BADGE_CLASS, _loaded as loaded };
+export { _loaded as loaded };

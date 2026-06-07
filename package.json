@@ -1,11 +1,14 @@
 {
   "name": "zeineuski-wasm",
   "version": "1.0.0",
-  "description": "Basque dialect identification — WebAssembly demo",
+  "private": true,
+  "description": "Basque dialect identification — WebAssembly web demo",
+  "homepage": "https://xezpeleta.github.io/zeineuski-wasm",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run copy-wasm",
+    "copy-wasm": "cp node_modules/fasttext.wasm.js/dist/core/fastText.common.wasm dist/",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -133,7 +133,7 @@
     /* ── Textarea (custom input) ── */
     textarea {
       width: 100%;
-      min-height: 100px;
+      min-height: 140px;
       padding: 0.85rem 1rem;
       background: var(--card);
       border: 1px solid var(--border);
@@ -183,6 +183,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 1.25rem 1.25rem 0.75rem;
+      margin-bottom: 1.75rem;
       display: none;
     }
     .result.visible { display: block; }
@@ -277,15 +278,12 @@
       <span class="green">&#10003;</span> Model loaded — <strong id="variantSize"></strong>MB total (34MB)
     </div>
 
-    <!-- Example sentences: click to select & auto-predict -->
-    <div class="section-label">Click an example to identify:</div>
-    <div class="example-grid" id="exampleCards"></div>
-
     <!-- Custom input -->
-    <div class="section-label">Or write your own text:</div>
+    <div class="section-label">Idatzi euskarazko testua:</div>
     <textarea
       id="input"
-      placeholder="Idatzi euskarazko testua hemen… / Write Basque text here…"
+      rows="5"
+      placeholder="Idatzi euskarazko testua hemen…"
     ></textarea>
 
     <div class="buttons">
@@ -304,6 +302,10 @@
       </div>
       <ul class="pred-list" id="predictionsList"></ul>
     </div>
+
+    <!-- Example sentences: click to select -->
+    <div class="section-label">edo aukeratu adibide bat:</div>
+    <div class="example-grid" id="exampleCards"></div>
   </div>
 
   <footer>

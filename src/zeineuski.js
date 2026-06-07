@@ -36,20 +36,19 @@ let _loaded = false;
 
 // ── Load WASM module and models ──
 function getWasmPath() {
-  // In production (GitHub Pages), the WASM is served from /zeineuski-wasm/assets/
-  // In dev (Vite), it's in /zeineuski-wasm/public/ → served at root level.
-  // Vite's module resolution causes locateFile to get scriptDirectory="/"
-  // instead of the base path, so we need to compute it ourselves in dev.
+  // Both dev and production need an explicit wasmPath because
+  // the default locateFile (scriptDirectory + url) resolves wrong.
+  // Dev: public/ served at base URL root => /zeineuski-wasm/fastText.common.wasm
+  // Prod: WASM in assets/ alongside JS bundles => /zeineuski-wasm/assets/fastText.common.wasm
+  const base = (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) || "/";
   if (typeof window !== "undefined" && window.location) {
     const loc = window.location;
     if (loc.hostname === "localhost" || loc.hostname === "127.0.0.1") {
-      // Dev mode: public/ files are served at the base path root
-      const base = import.meta.env.BASE_URL || "/";
       return base + "fastText.common.wasm";
     }
   }
-  // Production: let default locateFile handle it (JS and WASM in same dir)
-  return undefined;
+  // Production: WASM is copied into dist/assets/ alongside the JS
+  return base + "assets/fastText.common.wasm";
 }
 
 async function getFastText() {

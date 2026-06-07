@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zeineuski — Basque dialect identification</title>
+  <title>EuskalkID — Basque dialect identification</title>
   <style>
     :root {
       --bg: #0f0f1a;
@@ -36,9 +36,9 @@
     .logo {
       font-size: 2.2rem;
       font-weight: 800;
-      letter-spacing: -1px;
+      letter-spacing: -0.5px;
     }
-    .logo span { color: var(--accent); }
+    .logo span { color: var(--accent); letter-spacing: -1px; }
     .subtitle {
       color: var(--text-muted);
       font-size: 0.9rem;
@@ -266,8 +266,8 @@
 <body>
   <div class="container">
     <header>
-      <div class="logo"><span>Z</span>eineuski</div>
-      <div class="subtitle">Basque dialect identification — Euskalkien identifikazio automatikoa</div>
+      <div class="logo">Euskalk<span>ID</span></div>
+      <div class="subtitle">Euskalkien identifikazio automatikoa</div>
     </header>
 
     <div class="status-bar">
@@ -311,7 +311,7 @@
   <footer>
     <a href="https://huggingface.co/itzune/zeineuski" target="_blank" rel="noopener">Models</a>
     &middot;
-    <a href="https://github.com/xezpeleta/zeineuski" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/xezpeleta/zeineuski" target="_blank" rel="noopener">Zeineuski</a>
     &middot;
     fastText WASM &middot; 34MB
   </footer>

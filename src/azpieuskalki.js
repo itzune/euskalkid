@@ -69,7 +69,7 @@ export async function loadModel(onProgress) {
   const ft = await getFastText();
   model = await ft.loadModel(MODEL_URL);
   _loaded = true;
-  onProgress?.("✅ Ready");
+  onProgress?.("Ready");
   return model;
 }
 

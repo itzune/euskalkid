@@ -66,9 +66,7 @@ async function getFastText() {
 
 export async function loadModel(onProgress) {
   if (_loaded) return model;
-  onProgress?.("⬇ Downloading WASM module…");
   const ft = await getFastText();
-  onProgress?.("⬇ Downloading model (31MB)…");
   model = await ft.loadModel(MODEL_URL);
   _loaded = true;
   onProgress?.("✅ Ready");

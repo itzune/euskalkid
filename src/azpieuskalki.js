@@ -70,9 +70,6 @@ export async function loadModel(onProgress) {
   const ft = await getFastText();
   onProgress?.("⬇ Downloading model (31MB)…");
   model = await ft.loadModel(MODEL_URL);
-  // Note: ft.loadModel both downloads the file AND parses it in WASM.
-  // The parsing phase (CPU-bound, single-threaded) happens after the
-  // network download completes — that's the long gap you see in DevTools.
   _loaded = true;
   onProgress?.("✅ Ready");
   return model;

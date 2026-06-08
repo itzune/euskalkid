@@ -1,9 +1,14 @@
 # Zeineuski WASM — Web Demo
 
-Basque (Euskara) dialect identification running entirely in the browser
-using WebAssembly (fastText).
+Basque (Euskara) dialect and sub-dialect identification running entirely in
+the browser using WebAssembly (fastText).
 
-Try it: https://xezpeleta.github.io/zeineuski-wasm
+## 🧪 Demos
+
+| Demo | URL | Model |
+|------|-----|-------|
+| **Euskalkiak** (dialect) | [itzune.eus/euskalkid](https://itzune.eus/euskalkid) | 2 models, 34MB — batua/dialectal → 5 euskalkis |
+| **Azpieuskalkiak** (sub-dialect) | [itzune.eus/euskalkid/azpieuskalki](https://itzune.eus/euskalkid/azpieuskalki) | 1 model, 31MB — 9 azpieuskalkis + 430 towns |
 
 ## How it works
 

@@ -668,6 +668,20 @@
       color: var(--text-muted);
     }
 
+    .footer-data {
+      margin-top: 0.5rem;
+      font-size: 0.71rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .footer-data a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color var(--transition);
+      font-weight: 500;
+    }
+    .footer-data a:hover { color: var(--accent); text-decoration: underline; }
+
     /* ═══════════════════════════════════════════════
        Responsive
        ═══════════════════════════════════════════════ */
@@ -765,6 +779,9 @@
       </a>
     </div>
     <div class="footer-text">fastText WASM · 31MB · MIT</div>
+    <div class="footer-data">
+      Training data: <a href="https://ahotsak.eus">Ahotsak.eus</a> ahozko historien transkripzioak
+    </div>
   </footer>
 
   <script type="module">

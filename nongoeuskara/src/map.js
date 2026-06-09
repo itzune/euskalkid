@@ -145,7 +145,17 @@ async function loadMap() {
   }
 }
 
-function highlightLabel(modelLabel) {
+/**
+ * Highlight all paths matching a given model label.
+ * 
+ * Two modes:
+ * - Per-path: highlights only paths with the exact data-model-label (used by hover).
+ * - Layer-wide: also highlights paths in the same parent layer that inherit
+ *   a different default label, but where some towns matched the target label.
+ *   Used by pinLabel() for model predictions, because the model can't 
+ *   disambiguate unnamed polygons within a split layer.
+ */
+function highlightLabel(modelLabel, layerWide = false) {
   if (highlightedLabel === modelLabel) return;
   resetHighlight();
 
@@ -153,15 +163,54 @@ function highlightLabel(modelLabel) {
   const info = MODEL_LABELS[modelLabel];
   const color = info?.color || "#e85d75";
 
+  // Collect matching paths and their parent layers
+  const matchingPaths = [];
+  const parentLayers = new Set();
+
   svgRoot.querySelectorAll("path").forEach((p) => {
-    if (getModelLabel(p) === modelLabel) {
-      p.style.fill = color;
-      p.style.fillOpacity = "0.85";
-      p.style.stroke = "#333";
-      p.style.strokeOpacity = "0.6";
-      p.style.filter = "drop-shadow(0 0 2px rgba(0,0,0,0.25))";
+    const pathLabel = getModelLabel(p);
+    if (pathLabel === modelLabel) {
+      matchingPaths.push(p);
+      // Track parent layer for layer-wide mode
+      let current = p.parentElement;
+      while (current && current !== svgRoot) {
+        if (current.dataset?.modelLabel) {
+          parentLayers.add(current);
+          break;
+        }
+        current = current.parentElement;
+      }
     }
   });
+
+  // Highlight direct matches
+  matchingPaths.forEach((p) => {
+    p.style.fill = color;
+    p.style.fillOpacity = "0.85";
+    p.style.stroke = "#333";
+    p.style.strokeOpacity = "0.6";
+    p.style.filter = "drop-shadow(0 0 2px rgba(0,0,0,0.25))";
+  });
+
+  // In layer-wide mode, highlight all paths in the parent layer(s)
+  // that don't have an explicit different sub-label.
+  // This makes model predictions light up the full dialect region
+  // even though the SVG can't split unnamed polygons by sub-zone.
+  if (layerWide) {
+    parentLayers.forEach((layer) => {
+      layer.querySelectorAll("path").forEach((p) => {
+        const pl = getModelLabel(p);
+        // Skip if path has a different known model label
+        if (pl && pl !== modelLabel && MODEL_LABELS[pl]) return;
+        // Highlight: no label, or same label, or unknown label
+        p.style.fill = color;
+        p.style.fillOpacity = "0.85";
+        p.style.stroke = "#333";
+        p.style.strokeOpacity = "0.6";
+        p.style.filter = "drop-shadow(0 0 2px rgba(0,0,0,0.25))";
+      });
+    });
+  }
 
   highlightedLabel = modelLabel;
 }
@@ -186,10 +235,11 @@ function resetHighlight() {
 
 /**
  * Pin a zone (from model prediction). Updates the header badge.
+ * Uses layer-wide highlighting so unnamed polygons also light up.
  */
 function pinLabel(modelLabel) {
   pinnedLabel = modelLabel;
-  highlightLabel(modelLabel);
+  highlightLabel(modelLabel, true);
 
   const info = MODEL_LABELS[modelLabel];
   if (info && badge && badgeSwatch && badgeName) {

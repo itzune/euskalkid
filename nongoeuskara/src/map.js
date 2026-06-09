@@ -96,26 +96,31 @@ async function loadMap() {
 
   greyOutAll();
 
-  const allPaths = svgRoot.querySelectorAll("path");
-  allPaths.forEach((path) => {
-    path.addEventListener("mouseenter", (e) => {
-      const townName = getElementName(path);
-      if (townName) {
-        tooltip.textContent = townName;
-        tooltip.classList.add("visible");
-        moveTooltip(e);
+  // Listen on the SVG root instead of individual paths.
+  // Many paths overlap (1,082 big polygons), so the topmost
+  // element at mouse position may not be the named town path.
+  svgRoot.addEventListener("mousemove", (e) => {
+    // Get ALL elements under the cursor, sorted by DOM depth (descending)
+    const elements = document.elementsFromPoint(e.clientX, e.clientY);
+    let townName = null;
+    for (const el of elements) {
+      if (el.tagName === "path" || el.tagName === "g") {
+        townName = getElementName(el);
+        if (townName) break;
       }
-    });
+    }
 
-    path.addEventListener("mouseleave", () => {
+    if (townName) {
+      tooltip.textContent = townName;
+      tooltip.classList.add("visible");
+      moveTooltip(e);
+    } else {
       tooltip.classList.remove("visible");
-    });
+    }
+  });
 
-    path.addEventListener("mousemove", (e) => {
-      if (tooltip.classList.contains("visible")) {
-        moveTooltip(e);
-      }
-    });
+  svgRoot.addEventListener("mouseleave", () => {
+    tooltip.classList.remove("visible");
   });
 
   // Hide hint once user has hovered

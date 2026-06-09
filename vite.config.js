@@ -28,6 +28,7 @@ export default defineConfig({
       input: {
         main: "index.html",
         azpieuskalki: "azpieuskalki.html",
+        nongoeuskara: "nongoeuskara/index.html",
       },
       output: {
         // Put all shared dependencies into one chunk — prevents

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nongoeuskara — Non dago euskara hau?</title>
+  <style>
+    :root {
+      --color-bg: #f8f9fa;
+      --color-text: #2d3748;
+      --color-muted: #8899aa;
+      --color-accent: #e85d75;
+      --color-panel: #ffffff;
+      --color-border: #e2e8f0;
+      --color-tooltip-bg: #ffffff;
+      --color-tooltip-text: #2d3748;
+      --color-tooltip-border: #e2e8f0;
+    }
+
+    .dark {
+      --color-bg: #1a1a2e;
+      --color-text: #e2e8f0;
+      --color-muted: #4a5568;
+      --color-accent: #f472b6;
+      --color-panel: #16213e;
+      --color-border: #2d3748;
+      --color-tooltip-bg: #16213e;
+      --color-tooltip-text: #e2e8f0;
+      --color-tooltip-border: #2d3748;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not(.light) {
+        --color-bg: #1a1a2e;
+        --color-text: #e2e8f0;
+        --color-muted: #4a5568;
+        --color-accent: #f472b6;
+        --color-panel: #16213e;
+        --color-border: #2d3748;
+        --color-tooltip-bg: #16213e;
+        --color-tooltip-text: #e2e8f0;
+        --color-tooltip-border: #2d3748;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-panel);
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .header h1 span {
+      color: var(--color-accent);
+    }
+    .header-subtitle {
+      font-size: 0.9rem;
+      color: var(--color-muted);
+      font-weight: 400;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      background: none;
+      border: 1.5px solid var(--color-border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--color-accent); }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Map container */
+    .map-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      min-height: 0;
+    }
+    .map-container svg {
+      width: 100%;
+      height: 100%;
+      max-width: 900px;
+      max-height: 100%;
+    }
+
+    /* Legend sidebar */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      padding: 12px 24px;
+      border-top: 1px solid var(--color-border);
+      background: var(--color-panel);
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: background 0.2s, transform 0.15s;
+      user-select: none;
+    }
+    .legend-item:hover { background: var(--color-border); }
+    .legend-item:active { transform: scale(0.96); }
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1.5px solid var(--color-border);
+      flex-shrink: 0;
+    }
+    .legend-item.active { background: var(--color-border); font-weight: 600; }
+    .legend-item.active .legend-swatch { border-color: var(--color-accent); }
+
+    /* Tooltip */
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      background: var(--color-tooltip-bg);
+      color: var(--color-tooltip-text);
+      border: 1px solid var(--color-tooltip-border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    .tooltip.visible { opacity: 1; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      border-top: 1px solid var(--color-border);
+      background: var(--color-panel);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div>
+      <h1><span>Non</span>goeuskara</h1>
+      <div class="header-subtitle">Pasatu sagua maparen gainetik euskalkiak ikusteko</div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Aldatu gaia">
+      <span class="theme-icon-dark">☀️</span>
+      <span class="theme-icon-light">🌙</span>
+    </button>
+  </header>
+
+  <div class="main">
+    <div class="map-container" id="mapContainer">
+      <!-- SVG injected by map.js -->
+    </div>
+
+    <div class="legend" id="legend">
+      <!-- Legend items injected by map.js -->
+    </div>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <footer class="footer">
+    Euskal Herriko udalerri mapa &middot; <a href="https://commons.wikimedia.org/wiki/File:Euskal_Herria_euskalkiak2.svg" style="color:var(--color-muted)">jatorria</a>
+  </footer>
+
+  <script type="module">
+    import { applyTheme, listenForSystemChanges, toggleTheme } from "/src/theme.js";
+
+    const currentTheme = applyTheme();
+    listenForSystemChanges();
+
+    const themeToggle = document.getElementById("themeToggle");
+    const iconDark = themeToggle.querySelector(".theme-icon-dark");
+    const iconLight = themeToggle.querySelector(".theme-icon-light");
+
+    function updateToggleIcon() {
+      const isDark = document.documentElement.classList.contains("dark");
+      iconDark.style.display = isDark ? "none" : "inline";
+      iconLight.style.display = isDark ? "inline" : "none";
+    }
+    updateToggleIcon();
+
+    themeToggle.addEventListener("click", () => {
+      toggleTheme();
+      updateToggleIcon();
+    });
+  </script>
+
+  <script type="module" src="/nongoeuskara/src/map.js"></script>
+</body>
+</html>

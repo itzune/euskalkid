@@ -1,0 +1,19 @@
+{
+  "municipalities_total": 702,
+  "municipalities_labelled": 430,
+  "label_counts": {
+    "ekialde-nafarra": 16,
+    "erdialde-sartaldea": 68,
+    "erdialde-sortaldea": 16,
+    "mendebal-sartaldea": 44,
+    "mendebal-sortaldea": 66,
+    "nafar-erdigunea": 15,
+    "nafar-hego-sartaldea": 11,
+    "nafar-ipar-sartaldea": 18,
+    "nafar-sortaldea": 14,
+    "naflap-sartaldea": 47,
+    "naflap-sortaldea": 73,
+    "zuberera": 42
+  },
+  "ahotsak_towns_unmatched": []
+}

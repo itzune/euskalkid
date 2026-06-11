@@ -20,6 +20,9 @@
       --color-input-focus: #e85d75;
       --color-badge-bg: #f1f5f9;
       --color-badge-text: #475569;
+      --map-mun-fill: #dde2e7;
+      --map-mun-stroke: #c2cad2;
+      --map-province-stroke: #8a949e;
     }
 
     .dark {
@@ -37,6 +40,9 @@
       --color-input-focus: #f472b6;
       --color-badge-bg: #1e2940;
       --color-badge-text: #cbd5e1;
+      --map-mun-fill: #2a3650;
+      --map-mun-stroke: #3c4a66;
+      --map-province-stroke: #5b6c8c;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -55,6 +61,9 @@
         --color-input-focus: #f472b6;
         --color-badge-bg: #1e2940;
         --color-badge-text: #cbd5e1;
+        --map-mun-fill: #2a3650;
+        --map-mun-stroke: #3c4a66;
+        --map-province-stroke: #5b6c8c;
       }
     }
 
@@ -119,7 +128,7 @@
       background: var(--color-badge-bg);
       color: var(--color-badge-text);
       border: 1.5px solid var(--color-border);
-      max-width: 260px;
+      max-width: 420px;
       overflow: hidden;
     }
     .prediction-badge.visible { display: flex; }
@@ -134,6 +143,14 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .prediction-secondary {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+      opacity: 0.55;
+    }
+    .prediction-secondary:empty { display: none; }
 
     /* Main */
     .main {
@@ -242,6 +259,7 @@
       <div class="prediction-badge" id="predictionBadge">
         <div class="prediction-swatch" id="predictionSwatch"></div>
         <span class="prediction-name" id="predictionName"></span>
+        <span class="prediction-secondary" id="predictionSecondary"></span>
       </div>
     </div>
     <button class="theme-toggle" id="themeToggle" title="Aldatu gaia">
@@ -267,7 +285,9 @@
 
   <footer class="footer-bar">
     Euskal Herriko udalerri mapa ·
-    <a href="https://commons.wikimedia.org/wiki/File:Euskal_Herria_euskalkiak2.svg">jatorria</a>
+    mugak: <a href="https://public.opendatasoft.com/explore/dataset/georef-spain-municipio/">georef-spain</a> +
+    <a href="https://github.com/gregoiredavid/france-geojson">france-geojson</a> ·
+    euskalkiak: <a href="https://ahotsak.eus/">Ahotsak</a>
     ·
     <span id="mapHint">pasatu sagua maparen gainetik herriak ikusteko</span>
   </footer>

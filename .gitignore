@@ -1,5 +1,8 @@
 node_modules/
 dist/
+__pycache__/
+nongoeuskara/build/*.geojson
+nongoeuskara/build/wikidata-*.json
 assets/
 fastText.common.wasm
 public/fastText.common.wasm

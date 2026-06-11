@@ -63,9 +63,18 @@ function runPrediction() {
       return;
     }
 
-    // Pin the predicted zone
+    // Pin the predicted zone; show the runner-up faintly when it's a real
+    // competitor (at least ~1/3 of the top confidence, relative threshold
+    // because the quantized model outputs spiky low-magnitude scores).
     const modelLabel = result.azpieuskalki;
-    window.euskalkid?.pinLabel(modelLabel);
+    const runnerUp = result.predictions
+      .filter((p) => p.label !== modelLabel)
+      .sort((a, b) => b.confidence - a.confidence)[0];
+    const secondaryLabel =
+      runnerUp && runnerUp.confidence >= Math.max(0.05, result.confidence * 0.35)
+        ? runnerUp.label
+        : null;
+    window.euskalkid?.pinLabel(modelLabel, secondaryLabel);
   } catch (err) {
     console.error("Prediction error:", err);
   }

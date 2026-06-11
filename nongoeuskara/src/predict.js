@@ -23,6 +23,7 @@ function showLoading() {
   if (!badge || !badgeSwatch || !badgeName) return;
   badgeSwatch.style.backgroundColor = "transparent";
   badgeName.textContent = "Kargatzen...";
+  badge.classList.remove("has-details");
   badge.classList.add("visible");
 }
 
@@ -30,6 +31,7 @@ function showReady() {
   if (!badge || !badgeSwatch || !badgeName) return;
   badgeSwatch.style.backgroundColor = "#94a3b8";
   badgeName.textContent = "Idatzi testua";
+  badge.classList.remove("has-details");
   badge.classList.add("visible");
   setTimeout(() => {
     if (badgeName.textContent === "Idatzi testua") {
@@ -108,6 +110,7 @@ async function init() {
     if (badge && badgeName) {
       badgeSwatch.style.backgroundColor = "#ef4444";
       badgeName.textContent = "Errorea";
+      badge.classList.remove("has-details");
       badge.classList.add("visible");
     }
     return;

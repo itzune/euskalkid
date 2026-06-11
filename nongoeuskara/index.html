@@ -213,6 +213,115 @@
       opacity: 0.5;
     }
     .prediction-secondary:empty { display: none; }
+    .badge-details {
+      display: none;
+      align-items: center;
+      background: none;
+      border: none;
+      padding: 2px;
+      margin-left: auto;
+      cursor: pointer;
+      color: inherit;
+      opacity: 0.6;
+      line-height: 0;
+      flex-shrink: 0;
+    }
+    .prediction-badge.has-details .badge-details { display: flex; }
+    .badge-details:hover { opacity: 1; color: var(--color-accent); }
+
+    /* Details modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--color-panel);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 540px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .modal-header h2 { font-size: 1rem; font-weight: 700; }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--color-muted);
+      line-height: 1;
+      padding: 2px 6px;
+    }
+    .modal-close:hover { color: var(--color-accent); }
+    .modal-body {
+      padding: 8px 18px 18px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+    }
+    .detail-section { margin-top: 14px; }
+    .detail-section h3 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-badge-text);
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+    .detail-row-name {
+      flex: 0 0 45%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .detail-row-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--color-input-bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .detail-row-bar span { display: block; height: 100%; border-radius: 4px; }
+    .detail-row-pct {
+      flex: 0 0 48px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: var(--color-badge-text);
+      opacity: 0.8;
+    }
+    .detail-empty { color: var(--color-badge-text); opacity: 0.7; }
+    .detail-section p { margin-bottom: 6px; line-height: 1.5; }
+    .detail-section a { color: var(--color-accent); }
+    .detail-section code {
+      background: var(--color-input-bg);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.8em;
+    }
+    .detail-models { margin: 4px 0 6px 18px; line-height: 1.6; }
 
     /* Main */
     .main {
@@ -321,6 +430,9 @@
       <div class="prediction-swatch" id="predictionSwatch"></div>
       <span class="prediction-name" id="predictionName"></span>
       <span class="prediction-secondary" id="predictionSecondary"></span>
+      <button class="badge-details" id="badgeDetails" title="Xehetasun gehiago">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      </button>
     </div>
     <div class="header-links">
       <a class="header-icon-link" href="https://itzune.eus" target="_blank" rel="noopener" title="Itzune">
@@ -351,6 +463,16 @@
   </div>
 
   <div class="tooltip" id="tooltip"></div>
+
+  <div class="modal-overlay" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Emaitza xehatuak</h2>
+        <button class="modal-close" id="modalClose" title="Itxi">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
 
   <footer class="footer-bar">
     Euskal Herriko udalerri mapa ·
@@ -393,5 +515,6 @@
 
   <script type="module" src="/nongoeuskara/src/map.js"></script>
   <script type="module" src="/nongoeuskara/src/predict.js"></script>
+  <script type="module" src="/nongoeuskara/src/details.js"></script>
 </body>
 </html>

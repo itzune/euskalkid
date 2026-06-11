@@ -18,6 +18,8 @@ export const DIALECT_NAMES = {
   western: "Mendebaldekoa (Bizkaiera)",
   central: "Erdialdekoa (Gipuzkera)",
   "nav-lab": "Nafar-Lapurtera",
+  navarrese: "Nafarrera",
+  souletin: "Zuberera",
   uncertain: "Zalantzazkoa",
 };
 
@@ -44,7 +46,7 @@ function getWasmPath() {
   if (typeof window !== "undefined" && window.location) {
     const loc = window.location;
     if (loc.hostname === "localhost" || loc.hostname === "127.0.0.1") {
-      return base + "fastText.common.wasm";
+      return base + "node_modules/fasttext.wasm.js/dist/core/fastText.common.wasm";
     }
   }
   // Production: WASM is copied into dist/assets/ alongside the JS
@@ -145,6 +147,34 @@ export function predict(text, threshold = 0.7) {
     dialectName: DIALECT_NAMES[topLabel] || topLabel,
     predictions,
   };
+}
+
+/**
+ * Raw outputs of both models, for the details view: full binary distribution
+ * (batua vs dialectal) and dialect top-k, without the batua short-circuit
+ * used by predict().
+ */
+export function predictDetailed(text) {
+  if (!_loaded) throw new Error("Models not loaded. Call loadModels() first.");
+
+  text = text.replace(/\n/g, " ").trim();
+  if (!text) return { binary: [], dialect: [] };
+
+  const binary = [];
+  const binResult = binaryModel.predict(text, 2);
+  for (let i = 0; i < binResult.size(); i++) {
+    const [conf, label] = binResult.get(i);
+    binary.push({ label: label.replace("__label__", ""), confidence: conf });
+  }
+
+  const dialect = [];
+  const dialResult = dialectModel.predict(text, 5);
+  for (let i = 0; i < dialResult.size(); i++) {
+    const [conf, label] = dialResult.get(i);
+    dialect.push({ label: label.replace("__label__", ""), confidence: conf });
+  }
+
+  return { binary, dialect };
 }
 
 export { _loaded as loaded };

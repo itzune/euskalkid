@@ -235,7 +235,7 @@ function clearHighlight() {
     svgRoot.removeAttribute("data-active-euskalki");
     svgRoot.removeAttribute("data-secondary-label");
   }
-  if (badge) badge.classList.remove("visible");
+  if (badge) badge.classList.remove("visible", "has-details");
 }
 
 /** Highlight the predicted zone(s) and show them in the header badge. */
@@ -252,7 +252,7 @@ function pinLabel(modelLabel, secondaryLabel, confidence) {
     if (badgeSecondary) {
       badgeSecondary.textContent = pct ? `${info.name} · ${pct}` : info.name;
     }
-    badge.classList.add("visible");
+    badge.classList.add("visible", "has-details");
   }
 }
 
@@ -264,4 +264,6 @@ window.euskalkid = {
   clearHighlight,
   pinLabel,
   MODEL_LABELS,
+  EUSKALKI_OF,
+  EUSKALKI_NAMES,
 };

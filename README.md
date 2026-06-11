@@ -46,10 +46,16 @@ cp node_modules/fasttext.wasm.js/dist/core/fastText.common.wasm public/
 
 ## Deployment
 
-Deploy to GitHub Pages:
+GitHub Pages serves from the `gh-pages` branch. A simple `git push` to `main` does **not** update the live website — you must rebuild and deploy manually:
+
 ```bash
-npm run build
-# Push dist/ to gh-pages branch
+npm run build      # Vite build → dist/
+npm run deploy     # gh-pages -d dist (pushes dist/ to gh-pages branch)
+```
+
+The `deploy` script runs `npm run build && gh-pages -d dist`. After pushing, GitHub automatically runs the "pages build and deployment" workflow (~30-60s). Verify with:
+```bash
+curl -s https://itzune.eus/nongoeuskara/nongoeuskara/index.html | grep -oP 'src="/nongoeuskara/assets/[^"]+\.js"'
 ```
 
 ## Related

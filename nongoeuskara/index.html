@@ -128,7 +128,7 @@
       background: var(--color-badge-bg);
       color: var(--color-badge-text);
       border: 1.5px solid var(--color-border);
-      max-width: 260px;
+      max-width: 420px;
       overflow: hidden;
     }
     .prediction-badge.visible { display: flex; }
@@ -143,6 +143,14 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .prediction-secondary {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+      opacity: 0.55;
+    }
+    .prediction-secondary:empty { display: none; }
 
     /* Main */
     .main {
@@ -243,10 +251,9 @@
     }
     .footer-bar a:hover { text-decoration: underline; }
   </style>
-  <script type="module" crossorigin src="/euskalkid/assets/nongoeuskara-Dcc2h6IP.js"></script>
-  <link rel="modulepreload" crossorigin href="/euskalkid/assets/theme-CgfMJcbi.js">
+  <script type="module" crossorigin src="/euskalkid/assets/nongoeuskara-BG6tZf87.js"></script>
   <link rel="modulepreload" crossorigin href="/euskalkid/assets/vendor-L47MbRn7.js">
-  <link rel="modulepreload" crossorigin href="/euskalkid/assets/azpieuskalki-D8KoTTyM.js">
+  <link rel="modulepreload" crossorigin href="/euskalkid/assets/predict-DDlkFUv9.js">
 </head>
 <body>
   <header class="header">
@@ -255,6 +262,7 @@
       <div class="prediction-badge" id="predictionBadge">
         <div class="prediction-swatch" id="predictionSwatch"></div>
         <span class="prediction-name" id="predictionName"></span>
+        <span class="prediction-secondary" id="predictionSecondary"></span>
       </div>
     </div>
     <button class="theme-toggle" id="themeToggle" title="Aldatu gaia">

@@ -157,7 +157,8 @@ def load_municipalities():
     """Load all features as dicts: {code, names: [candidates], geometry, province}."""
     muns = []
 
-    for fname in ("municipios-eae.geojson", "municipios-nafarroa.geojson"):
+    for fname in ("municipios-eae.geojson", "municipios-nafarroa.geojson",
+                  "municipios-trebinu.geojson"):
         data = json.loads((HERE / fname).read_text())
         for feat in data["features"]:
             props = feat["properties"]
@@ -166,11 +167,13 @@ def load_municipalities():
             names = [props["mun_name"]]
             if props.get("mun_name_local"):
                 names.append(props["mun_name_local"])
+            # Trebiñu enclave: administratively Burgos (09), culturally Araba.
+            province = "01" if props["prov_code"] == "09" else props["prov_code"]
             muns.append({
                 "code": props["mun_code"],
                 "official_name": props["mun_name"],
                 "names": names,
-                "province": props["prov_code"],
+                "province": province,
                 "geometry": shape(feat["geometry"]),
                 "source": "ine",
             })

@@ -115,16 +115,15 @@
       background: none;
       border: 1.5px solid var(--color-border);
       border-radius: 8px;
-      padding: 5px 9px;
+      padding: 7px 8px;
       cursor: pointer;
-      font-size: 1.1rem;
       color: var(--color-text);
       display: flex;
       align-items: center;
-      gap: 4px;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, color 0.2s;
+      line-height: 0;
     }
-    .theme-toggle:hover { border-color: var(--color-accent); }
+    .theme-toggle:hover { border-color: var(--color-accent); color: var(--color-accent); }
 
     /* Prediction badge */
     .prediction-badge {
@@ -279,8 +278,8 @@
       <span class="prediction-secondary" id="predictionSecondary"></span>
     </div>
     <button class="theme-toggle" id="themeToggle" title="Aldatu gaia">
-      <span class="theme-icon-dark">☀️</span>
-      <span class="theme-icon-light">🌙</span>
+      <svg class="theme-icon-dark" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <svg class="theme-icon-light" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
     </button>
   </header>
 

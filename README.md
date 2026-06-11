@@ -25,7 +25,7 @@ the browser using WebAssembly (fastText).
 | Dialect (web) | ~13MB | 5-class euskalkiak — lazy-loaded in the details modal |
 | **Total** | **~65MB** | |
 
-The azpieuskalki model was updated (2025) with additional data to fix classification issues with Zuberotarra (Souletin).
+The azpieuskalki model was updated (June 2026) with additional data to fix classification issues with Zuberotarra (Souletin).
 
 Models are hosted at [itzune/zeineuski](https://huggingface.co/itzune/zeineuski).
 
